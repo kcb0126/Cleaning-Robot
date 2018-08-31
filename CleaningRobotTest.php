@@ -72,4 +72,31 @@ class CleaningRobotTest extends PHPUnit\Framework\TestCase
         $this->assertEquals($expectedResult['final'], $result['final']);
         $this->assertEquals($expectedResult['battery'], $result['battery']);
     }
+
+    public function testTurnning()
+    {
+        $turnLeft = function ($facing) {
+            $directions = ['N', 'E', 'S', 'W'];
+            $index = array_search($facing, $directions);
+            $index = ($index - 1 + 4) % 4;
+            return $directions[$index];
+        };
+
+        $turnRight = function ($facing) {
+            $directions = ['N', 'E', 'S', 'W'];
+            $index = array_search($facing, $directions);
+            $index = ($index + 1) % 4;
+            return $directions[$index];
+        };
+
+        $this->assertEquals('W', $turnLeft('N'));
+        $this->assertEquals('N', $turnLeft('E'));
+        $this->assertEquals('E', $turnLeft('S'));
+        $this->assertEquals('S', $turnLeft('W'));
+
+        $this->assertEquals('E', $turnRight('N'));
+        $this->assertEquals('S', $turnRight('E'));
+        $this->assertEquals('W', $turnRight('S'));
+        $this->assertEquals('N', $turnRight('W'));
+    }
 }

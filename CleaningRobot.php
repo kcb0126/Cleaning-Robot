@@ -83,6 +83,26 @@ class CleaningRobot
         return [];
     }
 
+    ///////////////////////////////// private methods //////////////////////////////
+
+    private function turnLeft()
+    {
+        $index = array_search($this->currentFacing, $this->directions);
+        $index = ($index - 1 + 4) % 4;
+        $this->currentFacing = $this->directions[$index];
+    }
+
+    private function turnRight()
+    {
+        $index = array_search($this->currentFacing, $this->directions);
+        $index = ($index + 1) % 4;
+        $this->currentFacing = $this->directions[$index];
+    }
+
+    ///////////////////////////////////// constants ////////////////////////////////
+
+    private $directions = ['N', 'E', 'S', 'W'];
+
     //////////////////////////////////// properties ////////////////////////////////
 
     /**
