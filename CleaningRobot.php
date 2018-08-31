@@ -73,6 +73,16 @@ class CleaningRobot
         return true;
     }
 
+    /**
+     * execute commands and return result.
+     * @return array
+     */
+    public function execute()
+    {
+        // TODO: execute commands and return result.
+        return [];
+    }
+
     //////////////////////////////////// properties ////////////////////////////////
 
     /**

@@ -44,14 +44,32 @@ class CleaningRobotTest extends PHPUnit\Framework\TestCase
      * @dataProvider dataProvider
      *
      * @param array $inputData
-     * @param array $resultData
+     * @param array $expectedResult
      * @param CleaningRobot $robot
      * @return array
      */
-    public function testInput(array $inputData, array $resultData, CleaningRobot $robot)
+    public function testInput(array $inputData, array $expectedResult, CleaningRobot $robot)
     {
         $this->assertEquals(true, $robot->input($inputData));
 
-        return [$robot, $resultData];
+        return [$robot, $expectedResult];
+    }
+
+    /**
+     * @depends testInput
+     *
+     * @param array $robotAndExpectedResult
+     */
+    public function testExecute(array $robotAndExpectedResult)
+    {
+        $robot = $robotAndExpectedResult[0];
+        $expectedResult = $robotAndExpectedResult[1];
+
+        $result = $robot->execute();
+
+        $this->assertEquals($expectedResult['visited'], $result['visited']);
+        $this->assertEquals($expectedResult['cleaned'], $result['cleaned']);
+        $this->assertEquals($expectedResult['final'], $result['final']);
+        $this->assertEquals($expectedResult['battery'], $result['battery']);
     }
 }
