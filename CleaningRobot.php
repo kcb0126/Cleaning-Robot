@@ -99,6 +99,11 @@ class CleaningRobot
         $this->currentFacing = $this->directions[$index];
     }
 
+    private function clean()
+    {
+        $this->cleaned[] = ['X' => $this->currentX, 'Y' => $this->currentY];
+    }
+
     ///////////////////////////////////// constants ////////////////////////////////
 
     private $directions = ['N', 'E', 'S', 'W'];
@@ -134,4 +139,9 @@ class CleaningRobot
      * @var array
      */
     private $remainingCommands;
+
+    /**
+     * @var array
+     */
+    private $cleaned = [];
 }
