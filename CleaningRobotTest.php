@@ -20,51 +20,38 @@ class CleaningRobotTest extends PHPUnit\Framework\TestCase
         return $robot;
     }
 
-    public function inputDataProvider()
+    public function dataProvider()
     {
-        return [
-            'test1' => [
-                [
-                    "map" => [
-                        ["S", "S", "S", "S"],
-                        ["S", "S", "C", "S"],
-                        ["S", "S", "S", "S"],
-                        ["S", "null", "S", "S"]
-                    ],
-                    "start" => ["X" => 3, "Y" => 0, "facing" => "N"],
-                    "commands" => [ "TL","A","C","A","C","TR","A","C"],
-                    "battery" => 80
-                ], true
-            ],
-
-            'test2' => [
-                [
-                    "map" => [
-                        ["S", "S", "S", "S"],
-                        ["S", "S", "C", "S"],
-                        ["S", "S", "S", "S"],
-                        ["S", "null", "S", "S"]
-                    ],
-                    "start" => ["X" => 3, "Y" => 1, "facing" => "S"],
-                    "commands" => [ "TR","A","C","A","C","TR","A","C"],
-                    "battery" => 1094
-                ], true]
+        $testFileList = [
+            ['test1.json', 'test1_result.json'],
+            ['test2.json', 'test2_result.json']
         ];
+
+        $dataToProvide = [];
+
+        foreach ($testFileList as $testCase) {
+            $inputJSON = file_get_contents($testCase[0]);
+            $resultJSON = file_get_contents($testCase[1]);
+
+            $dataToProvide[$testCase[0]] = [json_decode($inputJSON, true), json_decode($resultJSON, true)];
+        }
+
+        return $dataToProvide;
     }
 
     /**
      * @depends      testConstruct
-     * @dataProvider inputDataProvider
+     * @dataProvider dataProvider
      *
-     * @param array $data
-     * @param bool $succeeded
+     * @param array $inputData
+     * @param array $resultData
      * @param CleaningRobot $robot
-     * @return CleaningRobot
+     * @return array
      */
-    public function testInput(array $data, bool $succeeded, CleaningRobot $robot)
+    public function testInput(array $inputData, array $resultData, CleaningRobot $robot)
     {
-        $this->assertEquals($succeeded, $robot->input($data));
+        $this->assertEquals(true, $robot->input($inputData));
 
-        return $robot;
+        return [$robot, $resultData];
     }
 }
