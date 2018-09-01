@@ -1,0 +1,1 @@
+php main.php test1.json test1_result.json
