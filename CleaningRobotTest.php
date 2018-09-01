@@ -10,6 +10,24 @@ include_once('CleaningRobot.php');
 
 class CleaningRobotTest extends PHPUnit\Framework\TestCase
 {
+    protected function assertEqualsArrayAsSet(array $expected, array $actual)
+    {
+        foreach ($expected as $item) {
+            $found = false;
+            foreach ($actual as $key => $itemActual) {
+                if($item === $itemActual) {
+                    $found = true;
+                    unset($actual[$key]);
+                    break;
+                }
+            }
+
+            if(!$found) $this->assertTrue(false, 'Failed asserting that two arrays are equal');
+        }
+
+        $this->assertEmpty($actual, 'Failed asserting that two arrays are equal');
+    }
+
     /**
      * @return CleaningRobot
      */
@@ -48,27 +66,13 @@ class CleaningRobotTest extends PHPUnit\Framework\TestCase
      * @param CleaningRobot $robot
      * @return array
      */
-    public function testInput(array $inputData, array $expectedResult, CleaningRobot $robot)
+    public function testInputAndExecute(array $inputData, array $expectedResult, CleaningRobot $robot)
     {
         $this->assertEquals(true, $robot->input($inputData));
 
-        return [$robot, $expectedResult];
-    }
-
-    /**
-     * @depends testInput
-     *
-     * @param array $robotAndExpectedResult
-     */
-    public function testExecute(array $robotAndExpectedResult)
-    {
-        $robot = $robotAndExpectedResult[0];
-        $expectedResult = $robotAndExpectedResult[1];
-
         $result = $robot->execute();
-
-        $this->assertEquals($expectedResult['visited'], $result['visited']);
-        $this->assertEquals($expectedResult['cleaned'], $result['cleaned']);
+        $this->assertEqualsArrayAsSet($expectedResult['visited'], $result['visited']);
+        $this->assertEqualsArrayAsSet($expectedResult['cleaned'], $result['cleaned']);
         $this->assertEquals($expectedResult['final'], $result['final']);
         $this->assertEquals($expectedResult['battery'], $result['battery']);
     }
