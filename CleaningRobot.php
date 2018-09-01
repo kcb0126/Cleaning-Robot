@@ -87,11 +87,13 @@ class CleaningRobot
 
             switch ($command) {
                 case 'TL':
-                    $this->turnLeft();
+                    $result = $this->turnLeft();
+                    if(!$result) break 2;
                     break;
 
                 case 'TR':
-                    $this->turnRight();
+                    $result = $this->turnRight();
+                    if(!$result) break 2;
                     break;
 
                 case 'A':
@@ -105,7 +107,8 @@ class CleaningRobot
                     break;
 
                 case 'C':
-                    $this->clean();
+                    $result = $this->clean();
+                    if(!$result) break 2;
                     break;
 
                 default:
@@ -117,6 +120,7 @@ class CleaningRobot
             'visited' => $this->visited,
             'cleaned' => $this->cleaned,
             'final' => ['X' => $this->currentX, 'Y' => $this->currentY, 'facing' => $this->currentFacing],
+            'battery' => $this->battery
         ];
     }
 
@@ -124,20 +128,28 @@ class CleaningRobot
 
     private function turnLeft()
     {
+        if($this->battery < 1) return false;
+        $this->battery--;
         $index = array_search($this->currentFacing, $this->directions);
         $index = ($index - 1 + 4) % 4;
         $this->currentFacing = $this->directions[$index];
+        return true;
     }
 
     private function turnRight()
     {
+        if($this->battery < 1) return false;
+        $this->battery--;
         $index = array_search($this->currentFacing, $this->directions);
         $index = ($index + 1) % 4;
         $this->currentFacing = $this->directions[$index];
+        return true;
     }
 
     private function clean()
     {
+        if($this->battery < 5) return false;
+        $this->battery -= 5;
         $found = false;
         foreach ($this->cleaned as $item) {
             if($item['X'] === $this->currentX && $item['Y'] === $this->currentY) {
@@ -147,6 +159,7 @@ class CleaningRobot
         }
 
         if (!$found) $this->cleaned[] = ['X' => $this->currentX, 'Y' => $this->currentY];
+        return true;
     }
 
     /**
@@ -154,6 +167,8 @@ class CleaningRobot
      */
     private function advance()
     {
+        if($this->battery < 2) return false;
+        $this->battery -= 2;
         $nextX = $this->currentX;
         $nextY = $this->currentY;
         switch ($this->currentFacing) {
@@ -204,6 +219,8 @@ class CleaningRobot
      */
     private function back()
     {
+        if($this->battery < 3) return false;
+        $this->battery -= 3;
         $nextX = $this->currentX;
         $nextY = $this->currentY;
         switch ($this->currentFacing) {
